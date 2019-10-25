@@ -11,17 +11,20 @@ import '../../model/FocusModel.dart';
  * 首页 
  */
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatefulWidget   {
   HomePage({Key key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   List _focusData = []; //轮播图数据集合
   List _hotProductList = []; //产品分类
    List _bestProductList = [];
+
+  @override
+  bool get wantKeepAlive => true;
 /*
  *网络请求数据 
  */
@@ -152,11 +155,8 @@ class _HomePageState extends State<HomePage> {
   Widget _recProductListWidget(){
       var itemWidth = (ScreenAdaper.getScreenWidth() - 30) / 2; 
 return  Container(
-
   padding: EdgeInsets.all(10),
-
   child: Wrap(
-
     runSpacing: 10 ,
     spacing: 10,
     children: this._bestProductList.map((value) {

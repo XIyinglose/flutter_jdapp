@@ -18,15 +18,25 @@ class Tabs extends StatefulWidget {
 class _TabsState extends State<Tabs> {
   int _currentIndex = 0; //tab 的默认标记
   List appBarTitles = ['首页', '分类', '购物车', '我的'];
+  PageController _pageController;
 
-  List _pageList = [HomePage(), CategoryPage(), CartPage(), UserPage()];
+  List<Widget> _pageList = [HomePage(), CategoryPage(), CartPage(), UserPage()];
+
+  @override
+  void initState() { 
+    super.initState();
+    this._pageController=new PageController(initialPage:this._currentIndex );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("京东商城"),
       ),
-      body: this._pageList[this._currentIndex], //内容的切换,
+      body: PageView(
+         controller: this._pageController,
+        children: this._pageList,
+      ), //内容的切换,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: this._currentIndex, //配置对应的索引值选中
         iconSize: 30.0, //icon的大小
@@ -46,6 +56,7 @@ class _TabsState extends State<Tabs> {
           setState(() {
             //改变状态
             this._currentIndex = index;
+             this._pageController.jumpToPage(index);
           });
         },
       ),
