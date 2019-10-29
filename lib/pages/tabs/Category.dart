@@ -10,7 +10,8 @@ class CategoryPage extends StatefulWidget {
   _CategoryPageState createState() => _CategoryPageState();
 }
 
-class _CategoryPageState extends State<CategoryPage> with AutomaticKeepAliveClientMixin {
+class _CategoryPageState extends State<CategoryPage>
+    with AutomaticKeepAliveClientMixin {
   int _selectIndex = 0;
   List _leftCateList = [];
   List _rightCateList = [];
@@ -113,19 +114,28 @@ class _CategoryPageState extends State<CategoryPage> with AutomaticKeepAliveClie
                 //处理图片
                 String pic = this._rightCateList[index].pic;
                 pic = Config.api + pic.replaceAll('\\', '/');
-                return Container(
-                 padding: EdgeInsets.all(10),
-                  child: Column(
-                    children: <Widget>[
-                      AspectRatio(
-                        aspectRatio: 1 / 1,
-                        child: Image.network("$pic", fit: BoxFit.cover),
-                      ),
-                      Container(
-                        height: ScreenAdaper.height(40),
-                        child: Text("${this._rightCateList[index].title}",style: TextStyle(fontSize: 12),),
-                      )
-                    ],
+                return InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/productList',
+                        arguments: {"cid": this._rightCateList[index].sId});
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      children: <Widget>[
+                        AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: Image.network("$pic", fit: BoxFit.cover),
+                        ),
+                        Container(
+                          height: ScreenAdaper.height(40),
+                          child: Text(
+                            "${this._rightCateList[index].title}",
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 );
               },

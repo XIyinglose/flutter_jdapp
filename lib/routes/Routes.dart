@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_jd/pages/tabs/Tabs.dart';
+import '../pages/SearchPage.dart';
+import '../pages/tabs/ProductListPage.dart';
+import '../pages/tabs/Tabs.dart';
 
 
 /*
@@ -9,7 +11,8 @@ import 'package:flutter_jd/pages/tabs/Tabs.dart';
 //配置路由
  final routes = {
     '/':(context)=>Tabs(),  // 首页
-
+    '/search': (context) => SearchPage(),
+    '/productList': (context,{arguments}) => ProductListPage(arguments:arguments),
  };
 
  //固定写法, 命名路由传值
