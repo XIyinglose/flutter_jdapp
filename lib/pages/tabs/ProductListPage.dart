@@ -38,6 +38,9 @@ class _ProductListPageState extends State<ProductListPage> {
   //解决重复请求的问题
   bool flag = true;
 
+  //是否有搜索的数据
+  bool _hasData = true;
+
   //是否有数据
 
   bool _hasMore = true;
@@ -58,9 +61,21 @@ class _ProductListPageState extends State<ProductListPage> {
   //二级导航选中判断
   int _selectHeaderId = 1;
 
+  //配置search搜索框的值
+
+  var _initKeywordsController = new TextEditingController();
+
+  var _cid; // 分类点击的id
+
+  var _keywords; // 输入框传值
+
   @override
   void initState() {
     super.initState();
+    this._cid = widget.arguments["cid"];
+    this._keywords = widget.arguments["keywords"];
+    //给search框框赋值
+    this._initKeywordsController.text = this._keywords;
     _getProductListData();
     //监听滚动条滚动事件
     _scrollController.addListener(() {
@@ -80,13 +95,28 @@ class _ProductListPageState extends State<ProductListPage> {
     setState(() {
       this.flag = false;
     });
-    var api =
-        '${Config.api}api/plist?cid=${widget.arguments["cid"]}&page=${this._page}&sort=${this._sort}&pageSize=${this._pageSize}';
-
+    var api;
+    if (this._keywords == null) {
+      api =
+          '${Config.api}api/plist?cid=${this._cid}&page=${this._page}&sort=${this._sort}&pageSize=${this._pageSize}';
+    } else {
+      api =
+          '${Config.api}api/plist?search=${this._keywords}&page=${this._page}&sort=${this._sort}&pageSize=${this._pageSize}';
+    }
     var result = await Dio().get(api);
-    print("" + widget.arguments["cid"]);
+  
     print(api);
     var productList = new ProductModel.fromJson(result.data);
+
+    //判断是否有搜索数据
+    if (productList.result.length == 0 && this._page == 1) {
+      setState(() {
+        this._hasData = false;
+      });
+    } else {
+      this._hasData = true;
+    }
+    //判断最后一页有没有数据
     if (productList.result.length < this._pageSize) {
       setState(() {
         // this._productList = productList.result;
@@ -295,20 +325,52 @@ class _ProductListPageState extends State<ProductListPage> {
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          title: Text("商品列表"),
-          // leading: Text(""),
-          actions: <Widget>[Text("")],
+          title: Container(
+            child: TextField(
+              controller: this._initKeywordsController,
+              autofocus: false,
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none)),
+              onChanged: (value) {
+                setState(() {
+                  this._keywords = value;
+                });
+              },
+            ),
+            height: ScreenAdaper.height(68),
+            decoration: BoxDecoration(
+                color: Color.fromRGBO(233, 233, 233, 0.8),
+                borderRadius: BorderRadius.circular(30)),
+          ),
+          actions: <Widget>[
+            InkWell(
+              child: Container(
+                height: ScreenAdaper.height(68),
+                width: ScreenAdaper.width(80),
+                child: Row(
+                  children: <Widget>[Text("搜索")],
+                ),
+              ),
+              onTap: () {
+                this._subHeaderChange(1);
+              },
+            )
+          ],
         ),
         endDrawer: Drawer(
           child: Container(
             child: Text("实现筛选功能"),
           ),
         ),
-        body: Stack(
-          children: <Widget>[
-            _productListWidget(),
-            _subHeaderWidget(),
-          ],
-        ));
+        body: _hasData
+            ? Stack(
+                children: <Widget>[
+                  _productListWidget(),
+                  _subHeaderWidget(),
+                ],
+              )
+            : Center(child: Text("没有您要浏览的数据")));
   }
 }

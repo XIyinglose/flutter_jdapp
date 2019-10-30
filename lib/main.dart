@@ -18,6 +18,9 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         initialRoute: '/',  //初始化的时候加载的路由
         onGenerateRoute: onGenerateRoute, // 加载路由文件
+        theme: ThemeData( // 设置主题颜色
+        primaryColor: Colors.white
+      ),
     );
   }
 }
