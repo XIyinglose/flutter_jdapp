@@ -1,9 +1,14 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_jd/model/ProductContentModel.dart';
 import '../../services/ScreenAdaper.dart';
 import '../ProductContents/ProductContentFirst.dart';
 import '../ProductContents/ProductContentSecond.dart';
 import '../ProductContents/ProductContentThird.dart';
 import '../../widget/JdButton.dart';
+import '../../config/Config.dart';
+import '../../widget/LoadingWidget.dart';
+
 /*
   商品详情
  */
@@ -16,6 +21,30 @@ class ProductContent extends StatefulWidget {
 }
 
 class _ProductContentState extends State<ProductContent> {
+
+  
+  List _productContentList=[];
+
+    @override
+  void initState() {
+    super.initState();
+    // print(this._productContentData.sId);
+
+    this._getContentData();
+  }
+
+    _getContentData() async{
+    
+    var api ='${Config.api}api/pcontent?id=${widget.arguments['id']}';
+
+    print(api);
+    var result = await Dio().get(api);
+    var productContent = new ProductContentModel.fromJson(result.data);
+  
+    setState(() {
+      this._productContentList.add(productContent.result);
+    });
+  }
   @override
   Widget build(BuildContext context) {
     ScreenAdaper.init(context);
@@ -70,30 +99,42 @@ class _ProductContentState extends State<ProductContent> {
             )
           ],
         ),
-        body: Stack(
+        body: this._productContentList.length>0?Stack(
+
           children: <Widget>[
+
             TabBarView(
-              children: <Widget>[
-                ProductContentFirst(),
-                ProductContentSecond(),
-                ProductContentThird()
-              ],
-            ),
-            Positioned(
-              width: ScreenAdaper.width(750),
-              height: ScreenAdaper.width(150),
-              bottom: 0,
-              child:  Row(
+                children: <Widget>[
+                  ProductContentFirst(this._productContentList),
+                  ProductContentSecond(this._productContentList),
+                  ProductContentThird()
+                ],
+             ),
+             Positioned(
+               width: ScreenAdaper.width(750),
+               height: ScreenAdaper.width(120),
+               bottom: 0,
+               child: Container(               
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.black26,
+                      width: 1
+                    )
+                  ),
+                  color: Colors.white
+                ),
+                child: Row(
                   children: <Widget>[
 
                     Container(
                       padding: EdgeInsets.only(top:ScreenAdaper.height(10)),
-                      width: ScreenAdaper.height(100) ,
+                      width: 100,
                       height: ScreenAdaper.height(120),
                       child: Column(
                         children: <Widget>[
                           Icon(Icons.shopping_cart),
-                          Text("购物车",style:  TextStyle( fontSize: 12),)
+                          Text("购物车")
                         ],
                       ),
                     ),
@@ -119,10 +160,11 @@ class _ProductContentState extends State<ProductContent> {
                     )
 
                   ],
-              ),
-            )
+                ),
+               ),
+             )
           ],
-        ),
+        ):LoadingWidget(),
       ),
     );
   }
