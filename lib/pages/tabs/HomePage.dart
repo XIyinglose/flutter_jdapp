@@ -35,7 +35,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     _getHotProductData();
     _getBestProductData();
   }
-
   //获取轮播图数据
   _showSwiperData() async {
     var api = '${Config.api}api/focus'; // 接口
@@ -46,7 +45,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       this._focusData = focusList.result;
     });
   }
-
     //热门商品数据
   _getHotProductData() async {
     var api = '${Config.api}api/plist?is_hot=1';
@@ -57,7 +55,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       this._hotProductList = hotProductList.result;
     });
   }
-
    //获取热门推荐的数据
   _getBestProductData() async {
     var api = '${Config.api}api/plist?is_best=1';
@@ -67,8 +64,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       this._bestProductList = bestProductList.result;
     });
   }
-
-
   //轮播图组件
   Widget _swiperWidget() {
     if (this._focusData.length > 0) {
@@ -93,8 +88,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       return Text('加载中...');
     }
   }
-
-    Widget _titleWidget(value) {
+  Widget _titleWidget(value) {
     return Container(
       height: ScreenAdaper.height(32),
       margin: EdgeInsets.only(left: ScreenAdaper.width(20)),
@@ -111,7 +105,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       ),
     );
   }
-
   //热门商品 控件
   Widget _hotProductListWidget() {
    if (this._hotProductList.length > 0) {
@@ -164,7 +157,13 @@ return  Container(
           String sPic=value.sPic;
           sPic=Config.api+sPic.replaceAll('\\', '/');
 
-          return Container(
+          return   InkWell(
+                onTap: (){
+                   Navigator.pushNamed(context, '/productContent',arguments: {
+                "id":value.sId
+              });
+                },
+            child: Container(
             padding: EdgeInsets.all(10),
             width: itemWidth,
             decoration: BoxDecoration(
@@ -216,6 +215,7 @@ return  Container(
                 )
               ],
             ),
+          ),
           );
       }).toList(),
   ),

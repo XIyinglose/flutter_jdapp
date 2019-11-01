@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../pages/SearchPage.dart';
 import '../pages/tabs/ProductListPage.dart';
 import '../pages/tabs/Tabs.dart';
-
+import '../pages/tabs/ProductContent.dart';
 
 /*
  * 路由配置文件
@@ -13,6 +13,7 @@ import '../pages/tabs/Tabs.dart';
     '/':(context)=>Tabs(),  // 首页
     '/search': (context) => SearchPage(),
     '/productList': (context,{arguments}) => ProductListPage(arguments:arguments),
+    '/productContent':(context,{arguments}) => ProductContent (arguments:arguments),
  };
 
  //固定写法, 命名路由传值
