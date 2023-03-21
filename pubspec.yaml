@@ -25,7 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   flutter_swiper: ^1.1.6  #轮播图
   flutter_screenutil: ^0.5.3 #屏幕适配
-  dio: ^2.1.7 #网络请求
+  dio: ">=2.1.7 <6.0.0" #网络请求
   shared_preferences: ^0.5.3+1
 dev_dependencies:
   flutter_test:
